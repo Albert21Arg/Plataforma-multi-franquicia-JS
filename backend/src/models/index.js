@@ -62,6 +62,26 @@ OrderItem.belongsTo(Product, {
   foreignKey: "product_id"
 })
 
+// Orden pertenece a una franquicia
+
+Order.belongsTo(Franchise, {
+  foreignKey: "franchise_id"
+})
+
+Franchise.hasMany(Order, {
+  foreignKey: "franchise_id"
+})
+
+
+// Orden pertenece a un usuario (cliente)
+
+Order.belongsTo(User, {
+  foreignKey: "user_id"
+})
+
+User.hasMany(Order, {
+  foreignKey: "user_id"
+})
 
 module.exports = {
   sequelize,

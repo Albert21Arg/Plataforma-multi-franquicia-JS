@@ -1,4 +1,11 @@
-const { Order, OrderItem, Product, sequelize } = require("../models")
+const { 
+  Order, 
+  OrderItem, 
+  Product, 
+  User, 
+  Franchise, 
+  sequelize 
+} = require("../models")
 
 const createOrder = async (req, res) => {
 
@@ -73,4 +80,51 @@ const createOrder = async (req, res) => {
   }
 }
 
-module.exports = { createOrder }
+const getInvoice = async (req, res) => {
+  try {
+
+    const { id } = req.params
+
+    const order = await Order.findByPk(id, {
+      include: [
+        {
+          model: Franchise,
+          attributes: ["id", "nombre"]
+        },
+        {
+          model: User,
+          attributes: ["id", "nombre", "email"]
+        },
+        {
+          model: OrderItem,
+          include: [
+            {
+              model: Product,
+              attributes: ["id", "name", "price"]
+            }
+          ]
+        }
+      ]
+    })
+
+    if (!order) {
+      return res.status(404).json({
+        message: "Orden no encontrada"
+      })
+    }
+
+    res.json(order)
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    })
+
+  }
+}
+
+module.exports = {
+  createOrder,
+  getInvoice
+}
