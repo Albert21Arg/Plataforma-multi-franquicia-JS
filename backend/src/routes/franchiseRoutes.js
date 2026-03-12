@@ -6,7 +6,8 @@ const {
   getAllFranchises,
   getFranchiseById,
   updateFranchise,
-  deleteFranchise
+  deleteFranchise,
+  addUserToFranchise
 } = require('../controllers/franchiseController')
 
 const verifyToken = require('../middlewares/authMiddleware')
@@ -51,5 +52,7 @@ router.delete(
   checkRole('superadmin'),
   deleteFranchise
 )
+
+router.post('/users', addUserToFranchise)
 
 module.exports = router

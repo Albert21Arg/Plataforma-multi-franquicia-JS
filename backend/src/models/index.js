@@ -1,14 +1,20 @@
 const sequelize = require('../config/database')
 const { DataTypes } = require('sequelize')
 
-const User = require('./User')
+const User = require('./user')
 const Franchise = require('./franchise')
-const FranchiseUserModel = require('./FranchiseUser')
+const Product = require('./product')
 
-const Product = require("./product")
 
-// Crear el modelo pivote
+// MODELOS QUE SON FUNCIONES
+const FranchiseUserModel = require('./franchiseUser')
+const OrderModel = require('./order')
+const OrderItemModel = require('./orderItem')
+
+// INICIALIZAR MODELOS
 const FranchiseUser = FranchiseUserModel(sequelize, DataTypes)
+const Order = OrderModel(sequelize, DataTypes)
+const OrderItem = OrderItemModel(sequelize, DataTypes)
 
 
 // RELACIÓN MUCHOS A MUCHOS
@@ -23,6 +29,9 @@ Franchise.belongsToMany(User, {
   foreignKey: "franchise_id"
 })
 
+
+// Franquicia -> Productos
+
 Franchise.hasMany(Product, {
   foreignKey: "franchise_id"
 })
@@ -32,10 +41,34 @@ Product.belongsTo(Franchise, {
 })
 
 
+// Orders
+
+Order.hasMany(OrderItem, {
+  foreignKey: "order_id"
+})
+
+OrderItem.belongsTo(Order, {
+  foreignKey: "order_id"
+})
+
+
+// Productos en OrderItems
+
+Product.hasMany(OrderItem, {
+  foreignKey: "product_id"
+})
+
+OrderItem.belongsTo(Product, {
+  foreignKey: "product_id"
+})
+
+
 module.exports = {
   sequelize,
   User,
   Franchise,
   FranchiseUser,
-  Product
+  Product,
+  Order,
+  OrderItem
 }

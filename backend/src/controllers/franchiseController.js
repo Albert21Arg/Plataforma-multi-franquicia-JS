@@ -1,4 +1,4 @@
-const { Franchise } = require('../models')
+const { Franchise, FranchiseUser  } = require('../models')
 
 // ✅ Crear franquicia
 const createFranchise = async (req, res) => {
@@ -80,10 +80,30 @@ const deleteFranchise = async (req, res) => {
   }
 }
 
+// agregar usuario a franquicia
+const addUserToFranchise = async (req, res) => {
+  try {
+
+    const { user_id, franchise_id, role } = req.body
+
+    const relation = await FranchiseUser.create({
+      user_id,
+      franchise_id,
+      role
+    })
+
+    res.status(201).json(relation)
+
+  } catch (error) {
+    res.status(500).json({ message: error.message })
+  }
+}
+
 module.exports = {
   createFranchise,
   getAllFranchises,
   getFranchiseById,
+  addUserToFranchise,
   updateFranchise,
   deleteFranchise
 }

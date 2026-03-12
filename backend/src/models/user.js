@@ -23,10 +23,6 @@ const User = sequelize.define('User', {
   rol: {
     type: DataTypes.ENUM('superadmin', 'admin', 'cliente'),
     defaultValue: 'cliente'
-  },
-  franchiseId: {
-    type: DataTypes.INTEGER,
-    allowNull: true
   }
 })
 

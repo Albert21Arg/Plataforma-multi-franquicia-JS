@@ -1,4 +1,4 @@
-const { UserFranchise } = require("../models")
+const { FranchiseUser } = require("../models")
 
 const franchiseMiddleware = async (req, res, next) => {
   try {
@@ -11,21 +11,20 @@ const franchiseMiddleware = async (req, res, next) => {
       })
     }
 
-    const relation = await UserFranchise.findOne({
+    const relation = await FranchiseUser.findOne({
       where: {
-        userId: req.user.id,
-        franchiseId: franchiseId
+        user_id: req.user.id,
+        franchise_id: franchiseId
       }
     })
 
-    if (!relation) {
-      return res.status(403).json({
-        message: "No perteneces a esta franquicia"
-      })
-    }
-
     req.franchiseId = franchiseId
-    req.userRole = relation.role
+
+    if (relation) {
+      req.userRole = relation.role
+    } else {
+      req.userRole = "customer"
+    }
 
     next()
 
